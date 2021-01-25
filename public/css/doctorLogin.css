@@ -1,0 +1,76 @@
+body,
+html {
+  height: 100%;
+  margin: 0;
+}
+
+button {
+    background-color: rgb(113, 113, 113);
+    border: none;
+    border-radius: 13%;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+/* Footer design */
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color:#333;
+  width: 100%;
+  color: white;
+  text-align: center;
+  padding-bottom: 0.3%;
+  padding-top: 0.3%;
+}
+
+input.emailBox {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+}
+
+section {
+    padding: 0% 5% 30% 5%;
+}
+
+.topnav {
+    overflow: hidden;
+    background-color: #333;
+    position: fixed;
+    z-index:1000;
+    width: 100%;
+}
+.topnav a {
+    color: white;
+    padding: 16px 20px;
+    text-decoration: none;
+    font-size: 24px;
+    display: block;
+}
+.topnav a.icon {
+  background: #333;
+  display: block;
+  padding-right: 2%;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+@media screen and (max-width: 450px) {
+
+    section h1 {
+        visibility: hidden;
+    }
+}

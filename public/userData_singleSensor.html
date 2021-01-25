@@ -1,0 +1,287 @@
+<!-- This is the userData_singleSensor.html page. This page loads when 'single-sensor' button is clicked from th top nav bar of the 'userData_multiSensor.html' page  -->
+<!-- This page shows various patient information, along with their credentials, multiple health parameter graphs, and location -->
+<!-- difference between 'userData_singleSensor.html' and 'userData_multiSensor.html' is that: the former shows only single sensor information on webpage while the later shows multiple simultaneously collected sensor information on the webpage -->
+
+<!-- because the code of this 'userData_singleSensor.html' is very similar to the code of 'userData_multiSensor.html', the 'commenting' can be understood from the 'userData_multiSensor.html' -->
+<!DOCTYPE html>
+<html lang="en">
+
+    <!-- The contents of head section are similar to that of 'userData_multiSensor.html'-->
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-database.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-auth.js"></script>
+
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="" crossorigin="" />
+        <!-- Include Leaflet JavaScript file after Leaflet’s CSS: -->
+        <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="" crossorigin=""></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+        <!-- Chart -->
+        <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+        <script language="javascript" type="text/javascript" src="p5/p5.js"></script>
+        <script language="javascript" type="text/javascript" src="p5/addons/p5.dom.js"></script>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="css/userData_singleSensor.css">
+        <!-- here we call the css file associated with the 'userData_singleSensor.html' file-->
+    </head>
+
+    <body>
+        <!-- '#main is responsible for shifting everything to the right as overlay opens' -->
+        <div id="main">
+            <!-- TopNav tag contains the code responsible for showing the 'SideBar', 'Date', 'Time', 'CSV download' and the 'logOut' button in the top navigation bar-->
+            <div class="topnav" id="myTopnav">
+                <a style="font-size:20px" class="fa fa-user" onclick="openNav()"></a>
+                <!-- open the sidebar when 'patient icon is clicked'-->
+        
+                <div class="dropdown" id='date-dropdown'>
+                    <button class="dropdown-button" id='dateButton'><i class="fa fa-calendar"></i> Select Date <i class="fa fa-caret-down"></i></button>
+                    <div class="dropdown-selection" id='date-dropdown-selection'>
+                        <!-- we will dynamically create anchor tags <a> here for date-keys -->
+                    </div>
+                </div>
+        
+                <div class="dropdown" id='time-dropdown'>
+                    <button class="dropdown-button" id='timeButton'><i class="fa fa-clock-o"></i> Select Time <i class="fa fa-caret-down"></i></button>
+                    <div class="dropdown-selection" id='time-dropdown-selection'>
+                        <!-- we will dynamically create anchor tags <a> here for time-keys -->
+                    </div>
+                </div>
+        
+                <a href="#" id='LoadCSV'><i class="fa fa-file-excel-o"></i> Download CSV</a>
+                <a href="#" onclick="logout()"><i class="fa fa-sign-out"></i> Logout</a>
+                <a href="userData_multiSensor.html">Click for Multi-Sensor Data</a>
+                <a href="javascript:void(0);" style="font-size:15px;" class="icon" onclick="myFunction()">&#9776;</a>
+            </div>
+        
+            <div class="content">
+                <section>
+                    <!-- this 'adresse' tag shows that layout section which contains the patient info i.e. his/her profile picture, name, age, vital data, location info etc -->
+                    <div class="adresse">
+                        <h2>Patient</h2>
+                        <hr style="width:95%; float:center; margin-top: -10px; margin-left: 2.2%;" />
+                        <div class="row">
+                            <div class="column">                       
+                                <img id="patientPhoto" src="#" style="width:200px;">
+                                <p id="patientName" style=" padding-top: 2%;">Name:</p>
+                                <hr style="width:95%; float:center; margin-top: -10px; margin-left: 3%;" />
+                                <p id="patientAge" style="left:0;">Age:</p>
+                                <hr style="width:95%; float:center; margin-top: -10px; margin-left: 3%;" />
+                                <p id="patientBloodGroup">Blood Group:</p>
+                                <hr style="width:95%; float:center; margin-top: -10px; margin-left: 3%;" />
+                                <p id="vitalInfo">Vital Info:</p> <!-- This 'p' element represents patient's vital info (one sensor data) -->
+                                <hr style="width:95%; float:center; margin-top: -10px; margin-left: 3%;" />
+                                <p id="patientLatitude">Latitude:</p>
+                                <hr style="width:95%; float:center; margin-top: -10px; margin-left: 3%;" />
+                                <p id="patientLongitude">Longitude:</p>
+                                <hr style="width:95%; float:center; margin-top: -10px; margin-left: 3%;" />
+                            </div>
+
+                            <div class="column" class="secondColumn" style="background-color:#bbb;">
+                                <form name="frm">
+                                    <input class="prescriptionBox" id="prescriptionBoxID" type="text" name="presc" placeholder="Prescription..." value="" disabled required /></br>
+                                </form>
+                                <button class="prescriptionButton" onclick="postPrescription()">Post Prescription</button>
+                    
+                                <div id="prescriptionMessage" style="display:none; margin-top: 2%;">Prescription Posted!</div> <!-- this div is hidden by default-->
+                    
+                                <div style="margin-top: 5%;">
+                                    <!-- The following div container has code for Dropdown Date Button for Prescription Date menu -->
+                                    <div class="prescription-dropdown" id='prescription-date-dropdown'>
+                                        <button class="prescription-dropdown-button" id='prescription-dateButton'><i class="fa fa-calendar"></i> Select Date <i class="fa fa-caret-down"></i></button>
+                                        <div class="prescription-dropdown-selection" id='prescription-date-dropdown-selection'>
+                                            <!-- we will dynamically create anchor tags <a> here for date-keys -->
+                                        </div>
+                                    </div>
+                        
+                                    <!-- The following div container has code for Dropdown Time Button for Prescription Time menu -->
+                                    <div class="prescription-dropdown" id='prescription-time-dropdown' style="float: right;">
+                                        <button class="prescription-dropdown-button" id='prescription-timeButton'><i class="fa fa-clock-o"></i> Select Time <i class="fa fa-caret-down"></i></button>
+                                        <div class="prescription-dropdown-selection" id='prescription-time-dropdown-selection'>
+                                            <!-- we will dynamically create anchor tags <a> here for time-keys -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- The following div container shows the prescription on a selected Date and Time -->
+                                <div id="patientPrescription" style="margin-top: 12%; float: center"> Prescription:</div>
+                            </div>
+                        
+                        </div>
+                        
+                        <h2 style=" padding-top: 5%;">Location Information</h2>
+                        <hr style="width:95%; float:center; margin-top: -10px; margin-left: 2.2%;" />
+                    </div>
+
+                    <!-- Put a div element with a certain id where you want your map to be: -->
+                    <div id="mapid"></div>
+                    
+                    <!-- This section of layout has name 'Vital Information' followed by a horizontal line -->
+                    <div class="adresse">
+                        <h2 style=" margin-top: 10%;">Vital Information</h2>
+                        <hr style="width:88%; float:left; margin-top: -10px; margin-left: 2.2%;" /></br>
+                    </div>
+                    <!-- Vital Information graph i.e. graph of single sensor readings is shown here -->
+                    <div id="ChartContainer" style="height: 300px; width: 88%; margin-left: 2.2%;"></div>
+                </section>
+            </div>
+    
+            <div id="myMenuItems" class="menuItems">
+                <!--shows sidebar elements-->
+            </div>
+        </div>
+    
+    
+        <!-- The following 'script' tag contains code to download patient CSV file when 'download' button is clicked -->
+        <script>
+            var _ref, _userLevelKeys, _arrUserLevelKeys, _user, _name, _age, _bloodGroup, _dateRef, _dateLevelKeys, _arrDateLevelKeys, _date, _timeRef, _timeLevelKeys, _arrTimeLevelKeys, _time, _ecg, _emg, _gsr, _pulse, _temp, _lat, _lon, i, j, k;
+            LoadCSV.addEventListener('click', (e) => {
+
+                let data = "";
+                const tableData = [];
+                var rows = [
+                    ['Patient Name', 'Date', 'Time', 'Age', 'Blood Group', 'ECG', 'EMG', 'GSR', 'Pulse', 'Temp', 'Latitude', 'Longitude']
+                ];
+
+                _ref = firebase.database().ref('User_Info');   //for date path
+                _ref.on('value', _got_Ref, _err_Ref);
+
+                function _got_Ref(data) {
+                    _userLevelKeys = data.val();
+                    _arrUserLevelKeys = Object.keys(_userLevelKeys); //array of all user keys
+
+                    for (i = 0; i < _arrUserLevelKeys.length; i++) {
+                        _user = _arrUserLevelKeys[i];                                           // _user=UID key for i=0
+                        _name = _userLevelKeys[_user]["name"];
+                        console.log("_name " + _name);                                          //(1 entry of csv)
+                        _age = _userLevelKeys[_user]["age"];
+                        console.log("_age " + _age);                                            //(4 entry of csv)
+                        _bloodGroup = _userLevelKeys[_user]["bloodGroup"];
+                        console.log("_bloodGroup " + _bloodGroup);                              //(5 entry of csv)
+
+                        _dateRef = firebase.database().ref('User_Timestamp_SingleSensor/' + _user);
+                        _dateRef.on('value', _got_dateRef, _err_dateRef);
+                    }
+                }
+
+                function _got_dateRef(data) {
+
+                    if (data.val() === null) {
+                        console.log("naah");  //path doesn't exist
+                        _date = "null";
+                        _time = "null";
+                        _ecg = "null";
+                        _emg = "null";
+                        _gsr = "null";
+                        _pulse = "null";
+                        _temp = "null";
+                        _lat = "null";
+                        _lon = "null";
+
+                        rows.push([_name, _date, _time, _age, _bloodGroup, _ecg, _emg, _gsr, _pulse, _temp, _lat, _lon]);
+                        console.log("rows: " + rows);
+                    }
+                    else {  //if path exists
+                        _dateLevelKeys = data.val();
+                        _arrDateLevelKeys = Object.keys(_dateLevelKeys); //array of all user's date keys in 'User_Timestamp_SingleSensor'
+                        for (j = 0; j < _arrDateLevelKeys.length; j++) {
+                            _date = _arrDateLevelKeys[j];                                                    //(2 entry of csv)
+                            console.log("date " + _date);
+
+                            _timeRef = firebase.database().ref('User_Timestamp_SingleSensor/' + _user + '/' + _date);
+                            _timeRef.on('value', _got_timeRef, _err_timeRef);
+                        }
+                    }
+                }
+
+                function _got_timeRef(data) {
+                    _timeLevelKeys = data.val();
+                    _arrTimeLevelKeys = Object.keys(_timeLevelKeys); //array of all user's date's time keys in 'User_Timestamp_SingleSensor'
+
+                    for (k = 0; k < _arrTimeLevelKeys.length; k++) {
+                        _time = _arrTimeLevelKeys[k];  // _time=10:38:04.404 for k=0                    //(3 entry of csv)
+                        _ecg = _timeLevelKeys[_time]["ECG"];
+                        console.log("ecg " + _ecg);                                     //(6 entry of csv)
+                        _emg = _timeLevelKeys[_time]["EMG"];
+                        console.log("emg " + _emg);                                            //(7 entry of csv)
+                        _gsr = _timeLevelKeys[_time]["GSR"];
+                        console.log("gsr " + _gsr);                                          //(8 entry of csv)
+                        _pulse = _timeLevelKeys[_time]["Pulse"];
+                        console.log("pulse " + _pulse);                                     //(9 entry of csv)
+                        _temp = _timeLevelKeys[_time]["Temp"];
+                        console.log("temp " + _temp);                                        //(10 entry of csv)
+                        _lat = _timeLevelKeys[_time]["Latitude"];
+                        console.log("lat " + _lat);                                      //(11 entry of csv)
+                        _lon = _timeLevelKeys[_time]["Longitude"];
+                        console.log("lon " + _lon);                                      //(12 entry of csv)
+                        rows.push([_name, _date, _time, _age, _bloodGroup, _ecg, _emg, _gsr, _pulse, _temp, _lat, _lon]);
+                        console.log("rows: " + rows);
+                    }
+                }
+
+                for (const row of rows) {
+                    const rowData = [];
+                    for (const column of row) {
+                        rowData.push(column);
+                    }
+                    tableData.push(rowData.join(","));
+                }
+                data += tableData.join("\n");
+                const a = document.createElement("a");
+                a.href = URL.createObjectURL(new Blob([data], { type: "text/csv" }));
+                a.setAttribute("download", "patient_SingleSensorData.csv");
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+
+            function _err_Ref(err) {
+                console.log('Error!');
+                console.log(err);
+            }
+
+            function _err_dateRef(err) {
+                console.log('Error!');
+                console.log(err);
+            }
+
+            function _err_timeRef(err) {
+                console.log('Error!');
+                console.log(err);
+            }
+        </script>
+        
+        <!--  To open the side Nav Bar when "Patient Icon" button is clicked -->
+        <script>
+            function openNav() { // if button is clicked,
+                if (document.getElementById("myMenuItems").style.width == "250px") {  // and sidebar is open,
+                    document.getElementById("myMenuItems").style.width = "0";  // then close it
+                    document.getElementById("main").style.marginLeft = "0";
+                } else {
+                    document.getElementById("myMenuItems").style.width = "250px";  // else open it
+                    document.getElementById("main").style.marginLeft = "250px";
+                }
+            }
+        </script>
+    
+        <!-- To make Top Nav Bar responsive, when the window is resized -->
+        <script>
+            function myFunction() {
+                var x = document.getElementById("myTopnav");
+                if (x.className === "topnav") {
+                    x.className += " responsive";
+                } else {
+                    x.className = "topnav";
+                }
+            }
+        </script>
+        <script language="javascript" type="text/javascript" src="js/userData_singleSensor.js"></script>
+        <!-- load the javascript file associated with this html file -->
+    </body>
+
+</html>

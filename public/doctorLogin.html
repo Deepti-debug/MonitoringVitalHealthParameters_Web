@@ -1,0 +1,47 @@
+<!-- This is the doctorLogin.html page. It is the second page that loads after we click at the 'Doctor' option from the overlay of the first page i.e. index.html -->
+<!DOCTYPE html>
+<html lang="en"> <!-- html tag begins -->
+    <head>  <!-- head tag begins -->
+        <title>doctorPage</title>  <!-- title of the page-->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- To add firebase database and firebase Authentication services to our WebApp, we use the following 3 lines of code-->
+        <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-database.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-auth.js"></script>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>  <!-- To use jQuery (javascript library) -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">  <!-- it is a css library added for styling -->
+    </head>  <!-- head tag ends -->
+
+    <body>  <!-- body tag begins -->
+        <div class="topnav">  <!-- This Top Navigation Menu contains a 'doctor' icon along with a text 'Doctor'-->
+            <a href="#" class="fa fa-user-md"> Doctor</a>  <!-- on the navigation bar at top, 'fa fa-user-md' is responsible for displaying doctor icon-->
+        </div>
+
+        <!--This section of code provides two boxes where user enters its email and password, then the respective javascript code allows user to Login -->
+        <section>
+            <h1 style="color: #484848; padding-top: 12%; margin-top: 0px;">Welcome Doctor!</h1>  <!-- This command displays a text called 'Welcome Doctor'-->
+            <input class="emailBox" id="txtEmail" type="email" name="txtEmail" placeholder="Email..." value="@gmail.com" required /></br>  <!-- This command offers an input textbox, where user enters its email-->
+            <input class="emailBox" id="txtPassword" type="password" name="txtPassword" placeholder="Password..." required /></br> <!-- This command offers an input textbox, where user enters its password-->
+            <button id="signInDoctor" onclick="login()">  <!-- when user presses this button (with ID 'signInDoctor'), login() function is executed, which is responible for logging in the user. The implementation of login() function can be found in javascript file-->
+                <i id="load_spin" class=""></i> Sign In  <!-- 'Sign In' is the name of the button. When user clicks on it, a spin element loads-->
+            </button>
+        </section>
+
+        <!-- This code is responsible for showing the Footer (which is an area located at the bottom of the page) -->
+        <div class="footer">
+            <p>© Copyright 1953 - 2019 | CSIR-CEERI, Pilani</p>
+            <a href="your link here"> <i class="fa fa-envelope-square fa-2x"></i></a>
+            <a href="your link here"> <i class="fa fa-facebook-square fa-2x"></i></a>
+            <a href="your link here"> <i class="fa fa-linkedin-square fa-2x"></i></a>
+            <a href="your link here"> <i class="fa fa-twitter-square fa-2x"></i></a>
+            <hr>
+            <p>Visit us at https://human-health-care.firebaseapp.com</p>
+        </div>
+    </body>
+
+    <script language="javascript" type="text/javascript" src="js/doctorLogin.js"></script>  <!-- The doctorLogin.js file is associated with this html file -->
+    <link rel="stylesheet" href="css/doctorLogin.css"> <!-- The doctorLogin.css file is associated with this html file -->
+</html>  <!-- html tag ends -->

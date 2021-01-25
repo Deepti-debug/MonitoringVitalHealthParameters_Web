@@ -1,0 +1,76 @@
+<!-- This is the index.html page. It is the first page that loads when we open the website via link 'https://human-health-care.firebaseapp.com' -->
+<!DOCTYPE html>
+<html lang="en">  <!-- This is the main tag called 'html' tag. This contains all the other tags like 'head' tag, 'body' tag, etc -->
+    <head>  <!-- 'head' tag contains all the dependencies/APIs/libraries to include in our code -->
+        <title>homePage</title>  <!-- 'title' tag is declared under the 'head' tag. 'title' tag specifies the title of a web page -->
+        <!-- 'meta' tags are little content descriptors that help tell search engines what a web page is about -->
+        <meta charset="utf-8">  <!-- This line of code specifies to search engine, which character set/encoding a website is written with -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">  <!-- viewport is user's visible area of webpage. It varies with the device. The code says that make the view of the web page match the viewport of user's device -->
+        
+        <!-- To add firebase database and firebase Authentication services to our WebApp, we use the following 3 lines of code-->
+        <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js"></script>         
+        <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-database.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-auth.js"></script>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>  <!-- To use jQuery (javascript library), -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">  <!-- it is a css library added for styling -->
+        
+        <link rel="stylesheet" href="css/index.css">  <!-- The index.css file is associated with this html page -->
+
+        <!-- the sole function of keeping this script in the head element is to load the alert box while the full page is visible -->
+        <script>  // 'script' tag allows us to write javascript code in an html page.
+            function alertUser(msg) {
+                alert(msg);
+            }
+        </script>
+    </head>  <!-- head tag closes here -->
+
+
+    <!-- The body tag includes code implementing the HTML document (that will be visible to user on his/her screen), such as headings, paragraphs, images, hyperlinks, tables, lists, buttons, etc -->
+    <body onload="alertUser('Click on the hamburger button on top-right corner!')">  <!-- Load this alert mesage as soon as page loads -->
+
+        <!-- Code associated with the Top Navigation Menu -->
+        <!-- This block of code is responsible for showing overlay options (i.e., About, Doctor, Contact), when hamburger button is clicked -->
+        <div class="topnav">  <!-- 'topnav' is the class name of this 'div' element. Class names or IDs are used in CSS file (for styling of the element) and JS file (for manupulating the elements) -->
+            <a href="#" class="fa fa-home fa-2x"> Home</a>  <!-- 'fa fa-home fa-2x' is predefined class, which renders a 'home' icon alongside the text 'Home'. Right now href="#" means when this link is clicked, nothing happens, we can later put a proper link in place of '#' so that on clicking it, we can move to that web page-->
+            <div style="font-size:30px;cursor:pointer" id="myLinks" class="overlay">  <!-- This is another div element containing the overlay options -->
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>  <!-- When overlay has to be closed, call this function closeNav(). The logic implementation can be found in index.js file -->
+                <div class="overlay-content">
+                    <a href="#" class="fa fa-info-circle"> About</a> <!-- This is the first option shown in overlay -->
+                    <a href="doctorLogin.html" class="fa fa-user-md"> Doctor</a>  <!-- This is the second option shown in overlay. Clicking this takes us to 'doctorLogin.html' -->
+                    <a href="#" class="fa fa-envelope"> Contact</a> <!-- This is the third option shown in overlay -->
+                </div>
+            </div>
+            <a href="javascript:void(0);" class="icon" onclick="openNav()"> <!-- When overlay has to be opened, call this function openNav(). The logic implementation can be found in index.js file -->
+              <i class="fa fa-bars"></i>
+            </a>
+        </div>
+
+        <!-- This code is responsible for showing two background images on this webpage -->
+        <div class="bg-image" style = "background: url(images/sys.png); background-size: 100%; -webkit-filter: blur(2px);"></div>  <!-- webkit-filter helps us blur the image to the desired extent -->
+        <div class="bg-image" style="background: url(images/shutter3.jpg); background-size: 100%; -webkit-filter: blur(2px); margin-bottom: 150px;"></div>
+
+        <!-- This code is responsible for showing foreground text on the first webpage -->
+        <div class="hero-text" id="text-hero">
+            <h1 class= "hero-text-h1" style="font-size:50px">Remote Health Monitoring</h1>
+            <p style="font-size:25px">Healthcare Made Easy!</p>
+        </div>    
+            
+        <!-- This code is responsible for showing the Footer (which is an area located at the bottom of the page) -->
+        <div class="footer">
+            <p>© Copyright 1953 - 2019 | CSIR-CEERI, Pilani</p>  <!-- This is the topmost text shown in the footer -->
+            <a href="your link here"> <i class="fa fa-envelope-square fa-2x"></i></a>  <!-- Here is a envelope icon which is clickable. For now, clicking it does nothing. If we want to go to another webpage with a click, we have to edit href value with a valid link -->
+            <a href="your link here"> <i class="fa fa-facebook-square fa-2x"></i></a>  <!-- Here is a facebook icon which is clickable -->
+            <a href="your link here"> <i class="fa fa-linkedin-square fa-2x"></i></a>  <!-- Here is a linkedIn icon which is clickable -->
+            <a href="your link here"> <i class="fa fa-twitter-square fa-2x"></i></a>  <!-- Here is a twitter icon which is clickable -->
+            <hr>
+            <p>Visit us at https://human-health-care.firebaseapp.com</p> <!-- This is the text shown at the last in the footer -->
+        </div>
+
+    </body> <!-- 'body' tag closes here -->
+
+    
+    <!-- The index.js file is associated with this html file -->
+    <script language = "javascript" type="text/javascript" src="js/index.js"></script>
+    
+</html> <!-- 'html' tag closes here -->

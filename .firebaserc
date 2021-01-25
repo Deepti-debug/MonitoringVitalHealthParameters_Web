@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "human-health-care",
+    "staging": "human-health-care"
+  }
+}
